@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>Level 1：初見歡迎</title>
+  <style>
+    body {
+      font-family: "Arial", sans-serif;
+      background: linear-gradient(to bottom, #fef5fa, #f3effc);
+      text-align: center;
+      padding: 60px 20px;
+      color: #333;
+    }
+
+    .game-frame {
+      background-color: #fff;
+      border: 3px dashed #ffd6e6;
+      border-radius: 30px;
+      padding: 40px 20px;
+      max-width: 480px;
+      margin: 0 auto;
+      box-shadow: 0 0 20px rgba(255, 182, 193, 0.2);
+    }
+
+    h2 {
+      color: #cc3366;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .router-img {
+      width: 150px;
+      margin-bottom: 20px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .click-button {
+      font-size: 20px;
+      background-color: #ff80a6;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 18px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .click-button:hover {
+      background-color: #ff5c8a;
+    }
+
+    #progressDisplay {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    #timer {
+      font-size: 22px;
+      margin-top: 10px;
+      color: #999;
+    }
+
+    .result {
+      margin-top: 30px;
+      font-size: 20px;
+      color: #cc3366;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-frame">
+    <h2>Level 1：初見歡迎</h2>
+    <img class="router-img" src="router_waiting.gif" alt="RT-N12 等待中">
+    <p>請在 <strong>10 秒</strong> 內點擊下方按鈕 10 次<br> 讓 RT-N12 知道你在牠身邊</p>
+    <button class="click-button" onclick="registerClick()">點一下我</button>
+
+    <div id="progressDisplay">互動次數：0 / 10</div>
+    <div id="timer">剩餘時間：10 秒</div>
+    <div class="result" id="resultText"></div>
+    <audio id="sound" src="pop.mp3" preload="auto"></audio>
+
+  </div>
+
+  <script>
+    let clickCount = 0;
+    let timeLeft = 10;
+    let timerStarted = false;
+    let timerInterval;
+const sound = document.getElementById("sound"); // 加入這行
+    function registerClick() {
+      if (!timerStarted) {
+        startTimer();
+        timerStarted = true;
+      }
+
+      if (timeLeft > 0 && clickCount < 10) {
+        clickCount++;
+        document.getElementById("progressDisplay").textContent = "互動次數：" + clickCount + " / 10";
+ sound.currentTime = 0; // 加入這行
+        sound.play();         // 加入這行
+        if (clickCount >= 10) {
+          endGame(true);
+        }
+      }
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").textContent = "剩餘時間：" + timeLeft + " 秒";
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          if (clickCount < 10) {
+            endGame(false);
+          }
+        }
+      }, 1000);
+    }
+
+    function endGame(success) {
+  let result = document.getElementById("resultText");
+  if (success) {
+    result.textContent = "牠感受到你的關注，微微閃了一下。準備進入下一關！";
+    setTimeout(() => window.location.href = "level2_game.html", 3000);
+  } else {
+    result.textContent = "牠有點落寞地閃了一下燈… 重新開機回到首頁吧。";
+    setTimeout(() => window.location.href = "router_game_homepage.html", 3000);
+  }
+}
+  </script>
+</body>
+</html>
